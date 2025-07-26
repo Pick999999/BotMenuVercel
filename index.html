@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Menu</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: var(--tg-theme-text-color, #000000);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .menu-item {
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .menu-item:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+        
+        .menu-item:active {
+            transform: translateY(0);
+        }
+        
+        .menu-item .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .menu-item .title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .menu-item .description {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .ec2-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .trade-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .settings-item {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .status-item {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Bot Menu</h1>
+            <p>เลือกบริการที่ต้องการ</p>
+        </div>
+        
+        <div class="menu-grid">
+            <button class="menu-item ec2-item" onclick="handleEC2()">
+                <span class="icon">☁️</span>
+                <div class="title">ขอ EC2</div>
+                <div class="description">จัดการ AWS EC2 Instance</div>
+            </button>
+            
+            <button class="menu-item trade-item" onclick="handleTrade()">
+                <span class="icon">📈</span>
+                <div class="title">R10 - Trade 1</div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+            
+            <button class="menu-item status-item" onclick="handleStatus()">
+                <span class="icon">📊</span>
+                <div class="title">ตรวจสอบสถานะ</div>
+                <div class="description">ดูสถานะระบบทั้งหมด</div>
+            </button>
+            
+            <button class="menu-item settings-item" onclick="handleSettings()">
+                <span class="icon">⚙️</span>
+                <div class="title">ตั้งค่า</div>
+                <div class="description">จัดการการตั้งค่าต่างๆ</div>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by Telegram Web Apps</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.ready();
+        
+        // Apply Telegram theme
+        document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
+        
+        // Expand the web app to full height
+        tg.expand();
+        
+        function sendDataToBot(data) {
+            // Send data back to bot
+            tg.sendData(JSON.stringify(data));
+        }
+        
+        function handleEC2() {
+            const data = {
+                action: 'ec2_request',
+                timestamp: new Date().toISOString(),
+                user_id: tg.initDataUnsafe?.user?.id
+            };
+            
+            // Show haptic feedback
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Send data to bot
+            sendDataToBot(data);
+            
+            // Show confirmation
+            tg.showAlert('กำลังประมวลผลคำขอ EC2...', function() {
+                tg.close();
+            });
+        }
+        
+        function handleTrade() {
+            const data = {
+                action: 'trade_r10',
+                timestamp: new Date().toISOString(),
+                user_id: tg.initDataUnsafe?.user?.id
+            };
+            
+            tg.HapticFeedback.impactOccurred('medium');
+            sendDataToBot(data);
+            
+            tg.showAlert('เริ่มต้นระบบเทรด R10...', function() {
+                tg.close();
+            });
+        }
+        
+        function handleStatus() {
+            const data = {
+                action: 'check_status',
+                timestamp: new Date().toISOString(),
+                user_id: tg.initDataUnsafe?.user?.id
+            };
+            
+            tg.HapticFeedback.impactOccurred('light');
+            sendDataToBot(data);
+            
+            tg.showPopup({
+                title: 'สถานะระบบ',
+                message: 'กำลังตรวจสอบสถานะ...',
+                buttons: [{type: 'ok'}]
+            }, function() {
+                tg.close();
+            });
+        }
+        
+        function handleSettings() {
+            const data = {
+                action: 'open_settings',
+                timestamp: new Date().toISOString(),
+                user_id: tg.initDataUnsafe?.user?.id
+            };
+            
+            tg.HapticFeedback.impactOccurred('light');
+            sendDataToBot(data);
+            
+            // You could also open another web app page
+            // window.location.href = 'settings.html';
+        }
+        
+        // Handle back button
+        tg.onEvent('backButtonClicked', function() {
+            tg.close();
+        });
+        
+        // Show back button
+        tg.BackButton.show();
+    </script>
+</body>
+</html>
