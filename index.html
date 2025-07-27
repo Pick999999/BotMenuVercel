@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bot Menu</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+	
     <style>
         * {
             margin: 0;
@@ -16,12 +19,14 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--tg-theme-bg-color, #ffffff);
             color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
+            padding: 0px;
             min-height: 100vh;
         }
         
         .container {
-            max-width: 400px;
+		    width:100%;
+            max-width: 100%;
+			overflow:auto;
             margin: 0 auto;
         }
         
@@ -37,11 +42,32 @@
         }
         
         .menu-grid {
-            display: grid;
-            gap: 15px;
+            sdisplay: grid;
+			display: flex;
+			margin:10px;
+
+            sgap: 15px;
         }
+		.mBtn {
+ 
+    
+    z-index: 3;
+    
+    min-height: 50px;
+    background: #ff0080;
+	color:white;
+    border: 1px solid #dadce0;
+    box-shadow: 0px 3px 10px 0px rgba(31, 31, 31, 0.08);
+    border-radius: 26px;
+    
+    box-sizing: border-box;
+	text-align:center;
+	align-items: center;
+    justify-content: center;
+    width: 100px;
+		}
         
-        .menu-item {
+        .menu-item,.menu-itemPlan {
             background: var(--tg-theme-button-color, #3390ec);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
@@ -54,6 +80,7 @@
             font-weight: 500;
             text-decoration: none;
             display: block;
+			margin:15px;
         }
         
         .menu-item:hover {
@@ -96,6 +123,8 @@
         .status-item {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
+		.btnselectedItemPlan { background:#80ff00;color:black }
+		.btnselectedItemAsset { background:#ffff80;color:black }
         
         .footer {
             margin-top: 40px;
@@ -111,32 +140,110 @@
             <h1>🤖 Bot Menu</h1>
             <p>เลือกบริการที่ต้องการ</p>
         </div>
+		<input type="text" id="planno" style='width:50px;padding:10px'>
+		<input type="text" id="assetSelected" style='width:50px;padding:10px'>
+		<input type="text" id="moneyTrade" style='width:50px;padding:10px'>
+
+		<button type='button' id='' class='mBtn' onclick="AjaxSave()">Save</button>
         
         <div class="menu-grid">
-            <button class="menu-item ec2-item" onclick="handleEC2()">
+            <button class="menu-itemPlan ec2-item" id='plan1' onclick="handlePlan(this.id)">
                 <span class="icon">☁️</span>
-                <div class="title">ขอ EC2</div>
-                <div class="description">จัดการ AWS EC2 Instance</div>
-            </button>
-            
-            <button class="menu-item trade-item" onclick="handleTrade()">
-                <span class="icon">📈</span>
-                <div class="title">R10 - Trade 1</div>
-                <div class="description">ระบบเทรดอัตโนมัติ</div>
-            </button>
-            
-            <button class="menu-item status-item" onclick="handleStatus()">
+                <div class="title">Plan-1</div>
+                <div class="description">4 Trade in 1 Minute</div>
+            </button> 
+			 <button class="menu-itemPlan status-item" id='plan2' onclick="handlePlan(this.id)">
                 <span class="icon">📊</span>
-                <div class="title">ตรวจสอบสถานะ</div>
-                <div class="description">ดูสถานะระบบทั้งหมด</div>
+                <div class="title">Plan-2</div>
+                <div class="description">55 Seconds</div>
             </button>
             
-            <button class="menu-item settings-item" onclick="handleSettings()">
+            <button class="menu-itemPlan settings-item" id='plan3' onclick="handlePlan(this.id)">
                 <span class="icon">⚙️</span>
-                <div class="title">ตั้งค่า</div>
-                <div class="description">จัดการการตั้งค่าต่างๆ</div>
+                <div class="title">Plan-3</div>
+                <div class="description">1 Hour</div>
             </button>
         </div>
+        <div class="menu-grid">    
+            <button class="menu-item trade-item" id= 'R_10' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">R10 </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= 'R_25' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">R25 </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= 'R_50' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">R50 </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+         </div> 
+         <div class="menu-grid">    
+			<button class="menu-item trade-item" id= 'R_75' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">R75 </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= 'R_100' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">R100 </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+
+     
+            
+           
+        </div>
+		
+
+		<div class="menu-grid">
+		   <button class="menu-item trade-item" id= '10v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-10v </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= '25v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-25V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= '50v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-50V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+          </div>
+          <div class="menu-grid">
+			<button class="menu-item trade-item" id= '75v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-75V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+		   <button class="menu-item trade-item" id= '100v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-100V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			<button class="menu-item trade-item" id= '150v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-150V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+           </div> 
+		   <div class="menu-grid">	
+			<button class="menu-item trade-item" id= '250v' onclick="handleTrade(this.id)">
+                <span class="icon">📈</span>
+                <div class="title">1HZ-250V </div>
+                <div class="description">ระบบเทรดอัตโนมัติ</div>
+            </button>
+			
+
+
+
+		</div>
         
         <div class="footer">
             <p>Powered by Telegram Web Apps</p>
@@ -176,21 +283,39 @@
             tg.showAlert('กำลังประมวลผลคำขอ EC2...', function() {
                 tg.close();
             });
+        } 
+
+		function handlePlan(thisid) {
+
+			//menu-item
+			// Get all elements with the class 'menu-item'
+            const menuItems = document.querySelectorAll('.menu-itemPlan');
+            // Iterate over each element and remove the 'btnSelected' class
+			menuItems.forEach(item => {
+				item.classList.remove('btnselectedItemPlan');
+			});
+			
+			$("#"+thisid).addClass('btnselectedItemPlan') ;
+			document.getElementById("planno").value = thisid;
+            
+
+			 
         }
         
-        function handleTrade() {
-            const data = {
-                action: 'trade_r10',
-                timestamp: new Date().toISOString(),
-                user_id: tg.initDataUnsafe?.user?.id
-            };
-            
-            tg.HapticFeedback.impactOccurred('medium');
-            sendDataToBot(data);
-            
-            tg.showAlert('เริ่มต้นระบบเทรด R10...', function() {
-                tg.close();
-            });
+        function handleTrade(thisid) {
+
+			//menu-item
+			// Get all elements with the class 'menu-item'
+            const menuItems = document.querySelectorAll('.menu-item');
+            // Iterate over each element and remove the 'btnSelected' class
+			menuItems.forEach(item => {
+				item.classList.remove('btnselectedItemAsset');
+			});
+			
+			$("#"+thisid).addClass('btnselectedItemAsset') ;			
+            document.getElementById("assetSelected").value = thisid;
+
+			 
         }
         
         function handleStatus() {
@@ -212,27 +337,52 @@
             });
         }
         
-        function handleSettings() {
-            const data = {
-                action: 'open_settings',
-                timestamp: new Date().toISOString(),
-                user_id: tg.initDataUnsafe?.user?.id
-            };
-            
-            tg.HapticFeedback.impactOccurred('light');
-            sendDataToBot(data);
-            
-            // You could also open another web app page
-            // window.location.href = 'settings.html';
-        }
+         
         
-        // Handle back button
-        tg.onEvent('backButtonClicked', function() {
-            tg.close();
-        });
         
-        // Show back button
-        tg.BackButton.show();
     </script>
+
+<script>
+async function AjaxSave() {
+
+    let result ;
+    let ajaxurl = 'https://pkderiv.shop/ajaxsaveplan';
+    let data = { "Mode": 'SavePlan' ,
+    "planno" : document.getElementById("planno").value ,
+    "asset" : document.getElementById("assetSelected").value ,
+	"moneyTrade" : document.getElementById("moneyTrade").value 
+    } ;
+    data2 = JSON.stringify(data);
+	//alert(data2);
+    try {
+        result = await $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: data2,
+			contentType: 'application/json',
+	    success: function(data, textStatus, jqXHR){
+              console.log(textStatus + ": " + jqXHR.status);
+              // do something with data
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+			  alert(textStatus + ": " + jqXHR.status + " " + errorThrown);	 
+              console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
+            }
+        });
+        alert(result);
+		document.getElementById("mainBoxAsset").innerHTML = result ;
+		hideWatingScreen();
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+
+
 </body>
 </html>
+
